@@ -1,4 +1,5 @@
 import { Text, View } from "react-native";
+import BleView from "../components/BleView"
 
 export default function Index() {
   return (
@@ -10,6 +11,7 @@ export default function Index() {
       }}
     >
       <Text>Edit app/index.tsx to edit this screen.</Text>
+      <BleView />
     </View>
   );
 }
