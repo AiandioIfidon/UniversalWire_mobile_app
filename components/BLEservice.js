@@ -29,33 +29,27 @@ const BLEservice = () => {
       // Start scanning for devices
       setIsScanning(true);
       console.log('Scanning for BLE devices...');
-
       bleManager.startDeviceScan(null, null, async (error, scannedDevice) => {
         if (error) {
           console.error('Scan error:', error);
           setIsScanning(false);
           return;
         }
-
         // Check if this is the device you want to connect to
         if (scannedDevice && scannedDevice.serviceUUIDs?.includes(SERVICE_UUID)) {
           // Stop scanning once we find the device
           console.log("Found : " + scannedDevice.name);
           bleManager.stopDeviceScan();
           setIsScanning(false);
-
           try {
             // Connect to the device
             const connectedDevice = await scannedDevice.connect();
             console.log('Connected to device');
-
             // Discover all services and characteristics
             const discoveredDevice = await connectedDevice.discoverAllServicesAndCharacteristics();
             console.log('Discovered services and characteristics');
-
             setDevice(discoveredDevice);
             setIsConnected(true);
-
           } catch (connectionError) {
             console.error('Connection error:', connectionError);
             setIsConnected(false);
