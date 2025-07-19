@@ -15,14 +15,6 @@ const BLEservice = () => {
   const SSID_CHARACTERISTIC_UUID = "b72b9432-25f9-4c7f-96cb-fcb8efde84fd";
   const PASSPHRASE_CHARACTERISTIC_UUID = "7c8451c7-7909-47ef-b072-35d24729b8aa"
 
-  useEffect(() => {
-    const requestPermissions = async () => {
-      const granted = await requestLocationPermission();
-      return granted;
-    };
-
-    requestPermissions();
-  }, []);
 
   const connectToDevice = async () => {
     try {

@@ -12,24 +12,25 @@ const BleView = () => {
 
     const SERVICE_UUID = "853f29b2-f5ed-4b69-b4c6-9cd68a9fc2b0";
     const CHARACTERISTIC_UUID = "b72b9432-25f9-4c7f-96cb-fcb8efde84fd";
-    useEffect(() => {
-        const requestPermissions = async () => {
-            const granted = await requestLocationPermission();
-            return granted;
-        };
 
-        requestPermissions();
-    }, []);
 
     useEffect(() => {
-        const onReceivedValue (value_received) {
-            setRecieved(value_received);
+        if(!device || !isConnected){
+            return;
         }
-        // not sure whether i'll jsut include it
-        const interval_id = setInterval(onReceivedValue, 200);
-        // could be too much
-        return () => clearInterval(interval_id);
-    }, []);
+        const subscription = startListening(device);
+        return () => subscription?.remove();
+    }, [device, isConnected]);
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const granted = await requestLocationPermission();
+      return granted;
+    };
+
+    requestPermissions();
+  }, []);
+
 
     const connectToDevice = async () => {
         try {
@@ -81,28 +82,57 @@ const BleView = () => {
         }
     };
 
-    const send = () => {
+    const send = async () => {
         try {
             await device.writeCharacteristicWithoutResponseForService(
                 SERVICE_UUID,
                 CHARACTERISTIC_UUID,
-                btoa(SSID),
+                btoa(Sent),
                 null
             )
-            console.log("Successful write to SSID characteristic\nWritten value: " + SSID)
+            console.log("Successful write to characteristic\nWritten value: " + Sent)
         } catch (error) {
             console.error("Failed to write to characteristic", error)
         }
     };
+
+    const startListening = (device) => {
+        return device.monitorCharacteristicForService(
+            SERVICE_UUID,
+            CHARACTERISTIC_UUID,
+            (error, characteristic) => {
+                if (error) {
+                    console.error('Notification error:', error);
+                    return;
+                }
+                const value = characteristic?.value;
+                if (value) {
+                    const decoded = atob(value);
+                    setRecieved(decoded);
+                }
+            }
+        );
+    }
     return (
         <View>
             <Text>Hello there</Text>
+            {isConnected ?
+                <TouchableOpacity
+                    style={styles.submitButton}
+                    onPress={disconnectDevice}><Text>Disconnnect</Text>
+                </TouchableOpacity>
+                : isScanning ? <Text>Scanning</Text>
+                    : <TouchableOpacity
+                        style={styles.submitButton}
+                        onPress={connectToDevice}><Text>Connect</Text>
+                    </TouchableOpacity>}
             <View>
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
                         placeholder="value to send"
                         value={Sent}
+                        onChangeText={text => setSent(text)}
                     />
                 </View>
                 <TouchableOpacity
@@ -110,7 +140,7 @@ const BleView = () => {
                     onPress={send}
                 ><Text>Send</Text></TouchableOpacity>
             </View>
-            <Text>Value received: {Recieved} // its just what is sent. useffect test</Text>
+            <Text style={{ fontSize: 20 }}>Value received: {Recieved} // its just what is sent. useffect test</Text>
 
         </View>
     );
