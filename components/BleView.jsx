@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { bleManager } from "../utils/bleinstance";
+import { bleManager } from "../utils/BLEinstance";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { ResourceSavingView } from "@react-navigation/elements";
 
