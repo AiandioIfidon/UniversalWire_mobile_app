@@ -1,12 +1,4 @@
 import { Text, View } from "react-native";
-<<<<<<< HEAD
-import {BLEservice} from "@/components/BLEservice";
-
-export default function Index() {
-  return (
-    <View>
-      <BLEservice />
-=======
 import BleView from "../components/BleView"
 
 export default function Index() {
@@ -19,7 +11,6 @@ export default function Index() {
       }}
     >
       <BleView />
->>>>>>> bluetooth
     </View>
   );
 }
