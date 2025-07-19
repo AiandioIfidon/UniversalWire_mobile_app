@@ -1,6 +1,5 @@
 <<<<<<< HEAD
 # UniversalWire_mobile_app
-A mobile app that communicates with the esp32 using bluetooth low energy and LAN communication over wifi.
 =======
 # Welcome to your Expo app 👋
 
