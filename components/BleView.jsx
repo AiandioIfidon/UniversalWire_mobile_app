@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { bleManager } from "../utils/BLEinstance";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import { ResourceSavingView } from "@react-navigation/elements";
 
 const BleView = () => {
     const [Sent, setSent] = useState('');
@@ -108,6 +107,7 @@ const BleView = () => {
                 const value = characteristic?.value;
                 if (value) {
                     const decoded = atob(value);
+                    console.log(`Received value: ${decoded}`);
                     setRecieved(decoded);
                 }
             }
